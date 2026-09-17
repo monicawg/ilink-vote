@@ -2,6 +2,7 @@ import { createBackend, resultsVisible, revealVisible, phaseIndex } from "./back
 import { esc, resultsHTML, revealHTML } from "./render.js";
 
 const CFG = window.APP_CONFIG;
+{ const s = new URLSearchParams(location.search).get("s"); if (s) CFG.sessionId = s; }  // ?s=rehearsal
 const $ = (s, r = document) => r.querySelector(s);
 const view = $("#view");
 const tabs = $("#tabs");
