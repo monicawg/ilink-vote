@@ -16,6 +16,7 @@
 
   --font-tc: "PingFang TC", "Noto Sans TC", "Noto Sans CJK TC", "Microsoft JhengHei", -apple-system, system-ui, sans-serif;
   --font-en: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: "Noto Sans TC", "PingFang TC", "Noto Sans CJK TC", "Microsoft JhengHei", -apple-system, system-ui, sans-serif; /* headings only: one 900 weight webfont */
 
   --gutter: 16px;
   --col: 560px;
@@ -69,7 +70,7 @@ img { display: block; max-width: 100%; }
   letter-spacing: .12em; text-transform: uppercase; color: var(--ink);
   display: inline-block; border-bottom: 2px solid var(--ink); padding-bottom: 4px; margin: 0 0 20px; white-space: nowrap;
 }
-h1 { font-size: 28px; line-height: 1.25; font-weight: 900; margin: 0 0 12px; letter-spacing: -.01em; }
+h1 { font-family: var(--font-display); font-size: 28px; line-height: 1.25; font-weight: 900; margin: 0 0 12px; letter-spacing: -.01em; }
 h2 { font-size: 20px; font-weight: 700; margin: 0 0 8px; }
 .sub { color: var(--ink-2); margin: 0 0 24px; }
 .muted { color: var(--gray); font-size: 13px; }
@@ -171,7 +172,7 @@ h2 { font-size: 20px; font-weight: 700; margin: 0 0 8px; }
 .q { border-top: 1px solid var(--line); padding: 20px 0 24px; }
 .q__k { font-family: var(--font-en); font-size: 11px; font-weight: 700; letter-spacing: .12em; color: var(--gray); margin-bottom: 6px; }
 .q__k b { color: var(--ink); }
-.q__t { font-size: 20px; font-weight: 700; margin: 0 0 14px; line-height: 1.35; }
+.q__t { font-family: var(--font-display); font-size: 20px; font-weight: 900; margin: 0 0 14px; line-height: 1.35; }
 .opts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .opt {
   aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
@@ -234,11 +235,11 @@ h2 { font-size: 20px; font-weight: 700; margin: 0 0 8px; }
   100% { background: var(--white); }
 }
 .rcard__wait { margin-top: auto; padding-top: 12px; font-size: 12px; color: var(--gray); }
-.reveal__closing { margin-top: 24px; background: var(--yellow); border: 2px solid var(--ink); padding: 18px; font-size: 19px; font-weight: 900; line-height: 1.35; }
+.reveal__closing { font-family: var(--font-display); margin-top: 24px; background: var(--yellow); border: 2px solid var(--ink); padding: 18px; font-size: 19px; font-weight: 900; line-height: 1.35; }
 
 /* ── bridge ────────────────────────────────────────────────── */
 .bridge { min-height: calc(100vh - var(--top-h) - var(--tabs-h) - 80px); display: flex; flex-direction: column; justify-content: center; }
-.bridge__line { font-size: 26px; font-weight: 900; letter-spacing: .02em; line-height: 1.4; }
+.bridge__line { font-family: var(--font-display); font-size: 26px; font-weight: 900; letter-spacing: .02em; line-height: 1.4; }
 .bridge__en { font-family: var(--font-en); font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--gray); margin-top: 10px; }
 .bridge__line b { background: var(--yellow); padding: 0 4px; }
 .bridge__note { color: var(--gray); margin-top: 24px; }
