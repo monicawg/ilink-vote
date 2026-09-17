@@ -76,6 +76,8 @@ def render(case, spec):
                 f = font(int(min(h * 0.55, w / (len(label) * 0.62))))
                 draw.text((box[0] + 8, box[1] + (box[3] - box[1]) * 0.2), label, fill=(17, 17, 17), font=f)
         img.save(os.path.join(out, f"p{i:02d}.webp"), "WEBP", quality=80, method=6)
+        small = img.resize((900, int(img.height * 900 / img.width)), Image.LANCZOS)
+        small.save(os.path.join(out, f"p{i:02d}.s.webp"), "WEBP", quality=78, method=6)  # phone-size variant
         img.save(os.path.join(out, f"p{i:02d}.jpg"), "JPEG", quality=82, optimize=True)
         if i == 1:
             th = img.resize((THUMB_W, int(img.height * THUMB_W / img.width)), Image.LANCZOS)

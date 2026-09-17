@@ -14,7 +14,7 @@
   --white: #FFFFFF;
   --danger: #C8321E;
 
-  --font-tc: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-tc: "PingFang TC", "Noto Sans TC", "Noto Sans CJK TC", "Microsoft JhengHei", -apple-system, system-ui, sans-serif;
   --font-en: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   --gutter: 16px;

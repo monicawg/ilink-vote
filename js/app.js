@@ -113,6 +113,7 @@ function intro() {
 
 function brief() {
   const B = C.brief;
+  prefetch(C.cases.flatMap((c) => [`assets/cases/${c.id}/thumb.webp`, qrUrl(c, 0)]));
   view.innerHTML = `
     <section class="brief">
       <div class="eyebrow">${B.eyebrow}</div>
@@ -132,6 +133,7 @@ function brief() {
 function cases() {
   LS.set(kSeen, true);
   const G = C.gallery;
+  prefetch(C.cases.flatMap((c) => [qrUrl(c, 0), qrUrl(c, 1)]));
   view.innerHTML = `
     <div class="eyebrow">${G.eyebrow}</div>
     <h1>${esc(G.h1)}</h1>
@@ -178,6 +180,7 @@ function caseView(id) {
       <a class="btn btn--ghost" href="#/cases">返回作品列表</a>
       ${next ? `<a class="btn" href="#/case/${next.id}">下一位：${next.id} →</a>` : `<a class="btn" href="#/vote">前往投票 →</a>`}
     </div>`;
+  prefetch(c.quick_review.map((_, i) => qrUrl(c, i)).concat(next ? [qrUrl(next, 0), qrUrl(next, 1)] : []));
   const strip = $("#strip"), dots = $("#dots").children;
   strip.addEventListener("scroll", () => {
     const i = Math.round(strip.scrollLeft / (strip.firstElementChild.offsetWidth + 10));
@@ -189,7 +192,7 @@ function caseView(id) {
   });
   view.addEventListener("click", (e) => {
     const img = e.target.closest(".strip__img img, .page img");
-    if (img) openLightbox(img.currentSrc || img.src);
+    if (img) openLightbox((img.currentSrc || img.src).replace(".s.webp", ".webp"));
   });
 }
 
@@ -200,8 +203,19 @@ function fullPages(c) {
 
 function pic(id, name, alt, lazy = true) {
   const base = `assets/cases/${id}/${name}`;
-  return `<picture><source type="image/webp" srcset="${base}.webp"><img src="${base}.jpg" alt="${esc(alt)}" ${lazy ? 'loading="lazy"' : ""} decoding="async"></picture>`;
+  const srcset = name === "thumb" ? `${base}.webp` : `${base}.s.webp 900w, ${base}.webp 1600w`;
+  return `<picture><source type="image/webp" srcset="${srcset}" sizes="(min-width: 768px) 560px, 88vw"><img src="${base}.jpg" alt="${esc(alt)}" ${lazy ? 'loading="lazy"' : ""} decoding="async"></picture>`;
 }
+
+// warm the cache for what the viewer will most likely open next
+const prefetched = new Set();
+function prefetch(urls) {
+  for (const u of urls) {
+    if (prefetched.has(u)) continue; prefetched.add(u);
+    const l = document.createElement("link"); l.rel = "prefetch"; l.as = "image"; l.href = u; document.head.appendChild(l);
+  }
+}
+const qrUrl = (c, i) => `assets/cases/${c.id}/p${String(c.quick_review[i].page).padStart(2, "0")}.s.webp`;
 
 // ── vote ─────────────────────────────────────────────────────
 let draft = null;
