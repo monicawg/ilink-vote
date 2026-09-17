@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Presenter｜你會選誰？</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Inter:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/presenter.css">
+</head>
+<body class="pr">
+  <header class="pr__bar">
+    <div class="pr__brand">PRESENTER CONSOLE <span id="pr-session"></span></div>
+    <div class="pr__conn"><span class="dot" id="pr-dot"></span><span id="pr-conn">連線中…</span></div>
+    <button type="button" class="btn btn--sm btn--ghost" id="btn-screen">全螢幕結果視圖</button>
+  </header>
+
+  <main class="pr__main">
+    <section class="pr__col pr__col--ctl">
+      <div class="pr__phase">
+        <div class="eyebrow">NOW</div>
+        <div class="pr__phase-name" id="pr-phase">—</div>
+        <div class="muted" id="pr-phase-note"></div>
+      </div>
+
+      <ol class="steps" id="steps">
+        <li data-phase="lobby"><button type="button" data-act="lobby"><b>0</b> 開場<span>觀眾可瀏覽題目與作品，投票鎖定</span></button></li>
+        <li data-phase="review"><button type="button" data-act="review"><b>1</b> 開始瀏覽作品<span>簡報第 12 頁 · 約 2 分鐘</span></button></li>
+        <li data-phase="voting_open"><button type="button" data-act="voting_open"><b>2</b> 開放投票<span>簡報第 13 頁 · 手機解鎖投票</span></button></li>
+        <li data-phase="voting_closed"><button type="button" data-act="voting_closed"><b>3</b> 截止投票<span>投票頁變唯讀</span></button></li>
+        <li data-phase="results"><button type="button" data-act="results"><b>4</b> 顯示現場結果<span>全場手機自動跳到現場結果</span></button></li>
+        <li data-phase="reveal"><button type="button" data-act="reveal"><b>5</b> 揭曉 A → B → C → D<span>固定順序，每按一次翻開一位</span></button>
+          <div class="steps__sub"><button type="button" data-act="reveal_all">全部揭曉（一次翻開四位）</button></div></li>
+        <li data-phase="bridge"><button type="button" data-act="bridge"><b>6</b> 回到講座<span>手機顯示「理解 → 思考 → 判斷 → 推進」</span></button></li>
+      </ol>
+
+      <div class="pr__danger">
+        <button type="button" class="btn btn--sm btn--ghost" id="btn-reset">重設（清空票數，回開場）</button>
+        <label class="pr__q3"><input type="checkbox" id="q3-toggle" checked> 啟用 Q3「你最看重什麼」</label>
+      </div>
+
+      <details class="pr__manual">
+        <summary>離線備援：手動輸入舉手票數</summary>
+        <div class="manual" id="manual"></div>
+        <div class="btn-row">
+          <button type="button" class="btn btn--sm" id="btn-manual-apply">套用手動票數</button>
+          <button type="button" class="btn btn--sm btn--ghost" id="btn-manual-clear">清除</button>
+        </div>
+      </details>
+    </section>
+
+    <section class="pr__col pr__col--res">
+      <div class="pr__live">
+        <div class="eyebrow">LIVE</div>
+        <div class="pr__count"><span id="pr-n">0</span><small>票已送出</small></div>
+        <div class="muted" id="pr-updated"></div>
+      </div>
+      <div id="pr-results"></div>
+    </section>
+  </main>
+
+  <!-- fullscreen view for screen share -->
+  <div class="screen" id="screen" hidden>
+    <div class="screen__inner" id="screen-inner"></div>
+    <div class="screen__hint">→ 下一步 · ← 上一步 · Esc 關閉</div>
+  </div>
+
+  <script src="config.js"></script>
+  <script type="module" src="js/presenter.js"></script>
+</body>
+</html>

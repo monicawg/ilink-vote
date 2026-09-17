@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#F6F3EC">
+  <meta name="robots" content="noindex">
+  <title>你會選誰？｜AI 無法取代的能力</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Inter:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23FFD400'/%3E%3Ctext x='32' y='46' font-size='40' font-family='Helvetica,Arial' font-weight='700' text-anchor='middle' fill='%23111'%3E%3F%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__event" id="topbar-event">GOLF × iLink × TibaMe</div>
+    <div class="topbar__status" id="topbar-status"><span class="dot"></span><span id="topbar-status-text">連線中…</span></div>
+  </header>
+
+  <main id="view" class="view" aria-live="polite"></main>
+
+  <nav class="tabs" id="tabs">
+    <a href="#/brief" data-tab="brief"><span class="tabs__k">01</span>題目</a>
+    <a href="#/cases" data-tab="cases"><span class="tabs__k">02</span>作品</a>
+    <a href="#/vote" data-tab="vote"><span class="tabs__k">03</span>投票<span class="tabs__lock" id="vote-lock" aria-hidden="true"></span></a>
+  </nav>
+
+  <div class="toast" id="toast" role="status" hidden>
+    <span id="toast-text"></span>
+    <button type="button" id="toast-btn"></button>
+  </div>
+
+  <div class="lightbox" id="lightbox" hidden>
+    <button type="button" class="lightbox__close" id="lightbox-close" aria-label="關閉">✕</button>
+    <div class="lightbox__scroll"><img id="lightbox-img" alt=""></div>
+  </div>
+
+  <script src="config.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
