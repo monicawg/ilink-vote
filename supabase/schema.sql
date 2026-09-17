@@ -139,9 +139,9 @@ grant execute on function public.presenter_set(text, text, jsonb) to anon, authe
 grant execute on function public.presenter_reset(text, text) to anon, authenticated;
 
 -- ── seed sessions + presenter keys ───────────────────────────
--- CHANGE THE KEYS before running. The key goes in the presenter URL: presenter.html?s=ilink-0918&key=...
+-- Presenter keys (already filled in). The key goes in the presenter URL: presenter.html?s=ilink-0918&key=...
 insert into public.sessions (id) values ('ilink-0918'), ('rehearsal') on conflict do nothing;
 insert into public.presenter_keys (session_id, key) values
-  ('ilink-0918', 'CHANGE-ME-long-random-string'),
-  ('rehearsal',  'CHANGE-ME-another-random-string')
+  ('ilink-0918', '34369dccc62d5a159a1d2695'),
+  ('rehearsal',  '7505a99bbc6eced1ea56a47d')
 on conflict (session_id) do update set key = excluded.key;
