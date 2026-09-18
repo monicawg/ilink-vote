@@ -87,7 +87,7 @@ function route(initial) {
     if (session.phase === "bridge") r = "bridge";
     else if (revealVisible(session)) r = "reveal";
     else if (session.phase === "results") r = "results";
-    else if (!r) r = LS.get(kSeen) ? "cases" : "intro";
+    else if (!r) r = "intro";   // fresh open always starts at the intro
   }
   if (!r) r = "intro";
   // pages the presenter has not unlocked fall back gracefully
