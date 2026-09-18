@@ -15,6 +15,7 @@ const LS = {
 const kClient = "ilink:client_id";
 const kVote = `ilink:${CFG.sessionId}:myvote`;
 const kSeen = `ilink:${CFG.sessionId}:seen`;
+const kResetSeen = `ilink:${CFG.sessionId}:reset_seen`;   // last reset this device has already applied
 const clientId = LS.get(kClient) || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random());
 LS.set(kClient, clientId);
 
@@ -43,7 +44,10 @@ function onSession(s) {
   const prev = session;
   session = s;
   // presenter reset → forget this device's vote so everyone starts clean
-  if (myVote && s.reset_at && (!myVote.t || myVote.t < s.reset_at)) { myVote = null; draft = null; LS.set(kVote, null); results = null; }
+  if (s.reset_at && s.reset_at > (LS.get(kResetSeen, 0) || 0)) {
+    LS.set(kResetSeen, s.reset_at);
+    myVote = null; draft = null; results = null; LS.set(kVote, null); LS.set(kSeen, null);
+  }
   renderStatus();
   if (prev.phase !== s.phase) {
     if (s.phase === "voting_open") {
