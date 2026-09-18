@@ -274,3 +274,8 @@ h2 { font-size: 20px; font-weight: 700; margin: 0 0 8px; }
 .lightbox__scroll { position: absolute; inset: 0; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 8px; }
 .lightbox__scroll img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .lightbox__close { position: absolute; top: 12px; right: 12px; z-index: 1; width: 40px; height: 40px; background: var(--paper); border: 0; font-size: 18px; font-weight: 700; }
+
+/* ── archive notice ────────────────────────────────────────── */
+.notice { border: 2px solid var(--ink); padding: 14px 16px; margin: 0 0 8px; font-size: 15px; line-height: 1.5; background: var(--white); }
+.notice b { display: block; font-weight: 700; margin-bottom: 4px; }
+.intro .btn-row { margin-top: auto; }

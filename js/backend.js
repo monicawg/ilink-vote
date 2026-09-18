@@ -38,6 +38,7 @@ class LocalBackend {
     if (this.chan) this.chan.onmessage = () => this._emit();
     window.addEventListener("storage", (e) => { if (e.key === this.kS) this._emit(); });
     setTimeout(() => this._status("live"), 0);
+    this.ready = Promise.resolve();
   }
   _read(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } }
   _write(k, v) { localStorage.setItem(k, JSON.stringify(v)); }

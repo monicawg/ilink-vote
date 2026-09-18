@@ -16,7 +16,7 @@ const PHASE_NOTES = {
   voting_closed: "投票唯讀。按「顯示現場結果」把結果推到全場手機。",
   results: "全場看現場結果。準備揭曉。",
   reveal: "逐一翻開 A → B → C → D，或一鍵全部揭曉。",
-  bridge: "手機顯示「理解 → 思考 → 判斷 → 推進」，回到簡報。",
+  bridge: "回顧模式：現場手機顯示「理解 → 思考 → 判斷 → 推進」；之後開網址的人可瀏覽作品並看結果，不能投票。",
 };
 
 async function boot() {

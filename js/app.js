@@ -25,6 +25,7 @@ let myVote = LS.get(kVote, null);   // {q1:[], q2:'', q3:[], sent:true|false, t}
 let results = null;
 let backend;
 let lastRevealStep = -1;
+let sessionReady = false;
 
 // ── boot ─────────────────────────────────────────────────────
 async function boot() {
@@ -34,6 +35,8 @@ async function boot() {
   backend.onStatus(renderStatus);
   backend.subscribeSession(onSession);
   window.addEventListener("hashchange", route);
+  try { await Promise.race([backend.ready, new Promise((r) => setTimeout(r, 6000))]); } catch {}
+  sessionReady = true;              // from here on, phase changes are live transitions
   route(true);
   $("#lightbox-close").addEventListener("click", closeLightbox);
   $("#lightbox").addEventListener("click", (e) => { if (e.target.id === "lightbox") closeLightbox(); });
@@ -49,6 +52,7 @@ function onSession(s) {
     myVote = null; draft = null; results = null; LS.set(kVote, null); LS.set(kSeen, null);
   }
   renderStatus();
+  if (!sessionReady) return;        // initial load: route(true) decides where to land
   if (prev.phase !== s.phase) {
     if (s.phase === "voting_open") {
       if (currentRoute() !== "vote") toast("講者已開放投票", "去投票", () => (location.hash = "#/vote"));
@@ -65,17 +69,31 @@ function onSession(s) {
   }
 }
 
+const isArchive = () => session.phase === "bridge";
+
+// third tab: 投票 until results are public, then 結果
+function renderTabs() {
+  const vt = tabs.querySelector('[data-tab="vote"]');
+  const showResults = resultsVisible(session);
+  vt.href = showResults ? "#/results" : "#/vote";
+  vt.lastChild.previousSibling.textContent = showResults ? "結果" : "投票";
+  const r = currentRoute();
+  vt.classList.toggle("is-active", showResults ? (r === "results" || r === "reveal") : r === "vote");
+}
+
 function renderStatus() {
   const el = $("#topbar-status"), t = $("#topbar-status-text");
   el.className = "topbar__status";
   const st = backend?.status;
   if (st === "off") { el.classList.add("is-off"); t.textContent = "離線 · 顯示靜態內容"; return; }
-  if (session.phase === "voting_open") { el.classList.add("is-open"); t.textContent = "投票開放中"; }
+  if (isArchive()) { el.classList.add("is-live"); t.textContent = "講座已結束 · 回顧模式"; }
+  else if (session.phase === "voting_open") { el.classList.add("is-open"); t.textContent = "投票開放中"; }
   else if (session.phase === "voting_closed") { el.classList.add("is-live"); t.textContent = "投票已截止"; }
   else if (resultsVisible(session)) { el.classList.add("is-live"); t.textContent = "結果公布"; }
   else { if (st === "live") el.classList.add("is-live"); t.textContent = st === "live" ? "瀏覽中 · 投票尚未開放" : "同步中…"; }
   const vt = tabs.querySelector('[data-tab="vote"]');
   vt.classList.toggle("is-open", session.phase === "voting_open" && !(myVote && myVote.sent));
+  renderTabs();
 }
 
 // ── router ───────────────────────────────────────────────────
@@ -84,7 +102,7 @@ function currentRoute() { return (location.hash.replace(/^#\/?/, "") || "").spli
 function route(initial) {
   let [r, arg] = location.hash.replace(/^#\/?/, "").split("/");
   if (initial) {
-    if (session.phase === "bridge") r = "bridge";
+    if (isArchive()) r = r || "intro";            // talk is over: free browsing, results under the 3rd tab
     else if (revealVisible(session)) r = "reveal";
     else if (session.phase === "results") r = "results";
     else if (!r) r = "intro";   // fresh open always starts at the intro
@@ -97,6 +115,7 @@ function route(initial) {
   (R[r] || intro)(arg);
   tabs.querySelectorAll("a").forEach((a) => a.classList.toggle("is-active", a.dataset.tab === r || (r === "case" && a.dataset.tab === "cases")));
   tabs.classList.toggle("is-hidden", r === "bridge");
+  renderTabs();
   view.className = "view" + (r === "case" || r === "reveal" || r === "cases" ? " view--wide" : "");
   window.scrollTo(0, 0);
 }
@@ -109,9 +128,9 @@ function intro() {
       <div class="eyebrow">${I.eyebrow}</div>
       <h1>${esc(I.h1)}</h1>
       <ul class="intro__setup">${I.setup.map((s) => `<li>${esc(s)}</li>`).join("")}</ul>
-      <p class="intro__note">${esc(I.note)}</p>
+      ${isArchive() ? `<div class="notice"><b>${esc(I.archive_title)}</b>${esc(I.archive_note)}</div>` : `<p class="intro__note">${esc(I.note)}</p>`}
       <p class="intro__foot">${esc(I.footnote)}</p>
-      <a class="btn" href="#/brief">${esc(I.cta)}</a>
+      ${isArchive() ? `<div class="btn-row"><a class="btn" href="#/brief">${esc(I.cta)}</a><a class="btn btn--ghost" href="#/results">${esc(I.archive_cta)}</a></div>` : `<a class="btn" href="#/brief">${esc(I.cta)}</a>`}
     </section>`;
 }
 
@@ -151,7 +170,7 @@ function cases() {
           <span class="card__cta">${esc(G.open)}</span>
         </div>
       </a>`).join("")}</div>
-    <p class="gallery__hint">${esc(G.hint)}</p>`;
+    <p class="gallery__hint">${esc(isArchive() ? G.hint_archive : G.hint)}</p>`;
 }
 
 function caseView(id) {
@@ -253,7 +272,7 @@ function vote() {
   if (closed && !sent) {
     view.innerHTML = `
       <div class="eyebrow">VOTE</div>
-      <div class="locked"><h1>${esc(V.closed_title)}</h1><p class="sub">${esc(V.missed_note)}</p>
+      <div class="locked"><h1>${esc(isArchive() ? "投票已關閉" : V.closed_title)}</h1><p class="sub">${esc(isArchive() ? "講座已結束。看看當天的現場投票與真實結果。" : V.missed_note)}</p>
       ${resultsVisible(session) ? `<a class="btn" href="#/results">看現場結果 →</a>` : ""}</div>`;
     return;
   }
@@ -332,6 +351,7 @@ async function resultsView() {
   $("#res-n").textContent = `${results.n} 人已投票`;
   $("#res").innerHTML = resultsHTML(C, results, session) + `<p class="muted" style="margin-top:20px">${esc(R.note)}</p>` +
     (revealVisible(session) ? `<a class="btn" href="#/reveal" style="margin-top:20px">看真實結果 →</a>` : `<p class="results__wait">${esc(R.wait)}</p>`);
+  if (isArchive()) $("#res-n").textContent += " · 講座當天的現場投票";
   view.querySelectorAll(".bar__fill").forEach((b) => { b.style.width = "0"; requestAnimationFrame(() => (b.style.width = b.dataset.w)); });
 }
 
