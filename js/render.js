@@ -11,7 +11,7 @@ export function resultsHTML(C, r, s) {
     <div class="q"><div class="q__k"><b>Q2</b> · ${esc(P.q2.hint)}</div><p class="q__t">${esc(P.q2.text)}</p>
       <div class="bignums">${P.q2.options.map((k) => `<div class="bignum"><div class="bignum__k">${k}</div><div class="bignum__v">${pct(r.q2[k])}<small>%</small></div><div class="bignum__n">${r.q2[k] || 0} 人</div></div>`).join("")}</div></div>
     ${s.q3_enabled && q3.length ? `<div class="q"><div class="q__k"><b>Q3</b> · ${esc(P.q3.hint)}</div><p class="q__t">${esc(P.q3.text)}</p>
-      <div class="bars">${q3.map(([k, v]) => `<div class="bar" style="grid-template-columns:110px 1fr 48px"><span style="font-size:14px;font-weight:500">${esc(k)}</span><div class="bar__track" style="height:18px"><div class="bar__fill" style="width:${pct(v)}%"></div></div><span class="bar__v">${v}</span></div>`).join("")}</div></div>` : ""}`;
+      <div class="bars">${q3.map(([k, v]) => `<div class="bar" style="grid-template-columns:110px 1fr 48px"><span style="font-size:14px;font-weight:500">${esc(k)}</span><div class="bar__track" style="height:18px"><div class="bar__fill" data-w="${pct(v)}%" style="width:${pct(v)}%"></div></div><span class="bar__v">${v}</span></div>`).join("")}</div></div>` : ""}`;
 }
 
 export function revealHTML(C, step, flipIdx = -1) {
